@@ -1,0 +1,222 @@
+/*Implementation of ADT on Binary Search Tree that stores the details of students : roll number, name and cgpa.
+Use the roll number of the student as the key value of each node 
+*/
+#include <stdio.h> 
+#include <conio.h> 
+#include <stdlib.h> 
+#include<string.h> 
+  
+struct stud
+{ 
+    int rollno; 
+    char name[25]; 
+    float cgpa; 
+}; 
+  
+struct node 
+{ 
+    struct stud s; 
+    struct node *left; 
+    struct node *right; 
+}; 
+struct node *tree=NULL; 
+  
+struct node *insert(struct node *tree) 
+{ 
+    int val;
+    struct node *ptr,*node,*parent; 
+    ptr=(struct node*)malloc(sizeof(struct node)); 
+    printf("\nEnter the value of the new node : "); 
+    printf("\nEnter the student's roll number:"); 
+    scanf("%d",&ptr->s.rollno); 
+    val=ptr->s.rollno;
+    printf("Enter the student's name:"); 
+    scanf("%s",ptr->s.name); 
+    printf("Enter the student's cgpa:"); 
+    scanf("%f",&ptr->s.cgpa);
+    ptr->left = NULL; 
+    ptr->right = NULL; 
+    if(tree==NULL) 
+    { 
+        tree=ptr; 
+        tree->left=NULL; 
+        tree->right=NULL; 
+    } 
+    else 
+    { 
+        parent=NULL; 
+        node=tree; 
+        while(node!=NULL) 
+        { 
+            parent=node; 
+            if(val<node->s.rollno) 
+                node=node->left; 
+            else 
+                node=node->right; 
+        } 
+        if(val<parent->s.rollno) 
+            parent->left=ptr; 
+        else 
+            parent->right=ptr; 
+    } 
+    return tree; 
+} 
+struct node *findmin(struct node *tree) 
+{ 
+    if((tree==NULL)||(tree->left==NULL)) 
+        return tree; 
+    else 
+        return findmin(tree->left); 
+} 
+struct node *findmax(struct node *tree) 
+{ 
+    if((tree==NULL)||(tree->right==NULL)) 
+        return tree; 
+    else 
+        return findmax(tree->right); 
+} 
+struct node *deleteTree(struct node *tree) 
+{ 
+    if(tree!=NULL) 
+    { 
+        deleteTree(tree->left); 
+        deleteTree(tree->right); 
+        free(tree); 
+    } 
+} 
+void preorder(struct node *tree) 
+{ 
+    if(tree!=NULL) 
+    { 
+        printf("%d %s %f\n", tree->s.rollno,tree->s.name,tree->s.cgpa); 
+        preorder(tree->left); 
+        preorder(tree->right); 
+    } 
+} 
+void inorder(struct node *tree) 
+{ 
+    if(tree!=NULL) 
+    { 
+        inorder(tree->left); 
+        printf("%d %s %f\n", tree->s.rollno,tree->s.name,tree->s.cgpa); 
+        inorder(tree->right); 
+    } 
+} 
+void postorder(struct node *tree) 
+{ 
+    if(tree!=NULL) 
+    { 
+        postorder(tree->left); 
+        postorder(tree->right); 
+        printf("%d %s %f\n", tree->s.rollno,tree->s.name,tree->s.cgpa); 
+    } 
+} 
+struct node* delete(struct node *tree, int val) 
+{ 
+    if(tree==NULL) 
+        return NULL; 
+    if (val>tree->s.rollno) 
+        tree->right=delete(tree->right,val); 
+    else if(val<tree->s.rollno) 
+        tree->left=delete(tree->left,val); 
+    else 
+    { 
+        if((tree->left==NULL)&&(tree->right==NULL)) 
+        { 
+            free(tree); 
+            return NULL; 
+        } 
+        else if((tree->left==NULL)||(tree->right==NULL))
+        { 
+            struct node *temp; 
+            if(tree->left==NULL) 
+                temp=tree->right; 
+            else 
+                temp=tree->left; 
+            free(tree); 
+            return temp; 
+        } 
+        else 
+        { 
+            struct node *temp=findmin(tree->right); 
+            tree->s.rollno=temp->s.rollno; 
+            tree->right=delete(tree->right,temp->s.rollno); 
+        } 
+    } 
+    return tree; 
+} 
+struct node* search(struct node *tree, int val) 
+{ 
+    if((tree==NULL)||(tree->s.rollno==val))  
+        return tree; 
+    else if(val>tree->s.rollno)  
+        return search(tree->right,val); 
+    else  
+        return search(tree->left,val); 
+} 
+int main() 
+{ 
+    int opt,val; 
+    struct stud s; 
+    struct node *ptr; 
+    do 
+    {
+        printf("\nEnter your choice :"); 
+        printf("\n1. Insert student record"); 
+        printf("\n2. Find the first student"); 
+        printf("\n3. Find the last student"); 
+        printf("\n4. Display the student details in preorder "); 
+        printf("\n5. Display the sutdent details in inorder "); 
+        printf("\n6. Display the stdent details in postorder "); 
+        printf("\n7. Search for a student"); 
+        printf("\n8. Delete a student record"); 
+        printf("\n9. Delete all the student's record"); 
+        printf("\n10. Exit\n"); 
+        scanf("%d",&opt); 
+        switch(opt) 
+        { 
+            case 1:  
+            tree=insert(tree); 
+            break; 
+            case 2: 
+            ptr=findmin(tree); 
+            printf("\nFirst student :\n");
+            printf("Roll No. :%d\nName :%s\nCGPA :%f\n",ptr->s.rollno,ptr->s.name,ptr->s.cgpa); 
+            break; 
+            case 3: 
+            ptr=findmax(tree); 
+            printf("\nLast student :\n");
+            printf("Roll No. :%d\nName :%s\nCGPA :%f\n",ptr->s.rollno,ptr->s.name,ptr->s.cgpa); 
+            break; 
+            case 4:
+            printf("\nStudent details in Preorder : \n"); 
+            preorder(tree); 
+            break;
+            case 5: 
+            printf("\nStudent details in Inorder : \n"); 
+            inorder(tree); 
+            break;
+            case 6: 
+            printf("\nStudent details in Postorder : \n"); 
+            postorder(tree); 
+            break; 
+            case 7: 
+            printf("\n Enter the roll no. to be searched :\n"); 
+            scanf("%d",&val); 
+            ptr=search(tree,val); 
+            printf("\nStudent record found :\nRoll No. : %d\nName : %s\nCGPA : %f\n",ptr->s.rollno,ptr->s.name,ptr->s.cgpa); 
+            break;
+            case 8: 
+            printf("\nEnter the roll no. of the student to be deleted : "); 
+            scanf("%d",&val); 
+            tree=delete(tree,val); 
+            printf("\nRecord deleted successfully!\n");
+            break; 
+            case 9: 
+            tree=deleteTree(tree); 
+            printf("\nStudent tree deleted!\n");
+            break; 
+        } 
+    }while(opt!=10); 
+    return 0; 
+}
