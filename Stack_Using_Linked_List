@@ -1,0 +1,86 @@
+#include <stdio.h>   
+#include <stdlib.h>
+
+struct node
+{
+    int data; 
+    struct node *next;
+};
+struct node *start=NULL;
+
+void push()
+{
+    struct node *temp=start;
+    struct node *t=(struct node*)malloc(sizeof(struct node));
+    printf("\nEnter the data to be inserted : ");
+    scanf("%d",&t->data);
+    t->next=NULL;
+    if(start==NULL)
+    {
+        start=t;
+        return;
+    }
+    while(temp->next!=NULL)
+        temp=temp->next;
+    temp->next=t;
+}
+void pop()
+{
+    struct node *prev=start,*cur=start;
+    if(start==NULL)
+    {
+        printf("\nStack is empty");
+        return;
+    }
+    while(cur->next!=NULL)
+    {
+        prev=cur;
+        cur=cur->next;
+    }
+    prev->next=NULL;
+    free(cur);
+}
+void display()
+{
+    struct node *temp=start;
+    if(start==NULL)
+    {
+        printf("\nStack is empty");
+        return;
+    }
+    printf("\nContents of the stack :\n");
+    while(temp!=NULL)
+    {
+        printf("%d\t",temp->data);
+        temp=temp->next;
+    }
+}
+
+int main ()  
+{  
+    int choice;
+    while(choice != 4)  
+    {  
+        printf("\nEnter your choice:");  
+        printf("\n1.Push\t2.Pop\t3.Display\t4.Exit\n");  
+        scanf("%d",&choice);  
+        switch(choice)  
+        {  
+            case 1:  
+                push();  
+                break;
+            case 2:
+                pop();  
+                break;
+            case 3:
+                display();  
+                break;
+            case 4:
+                exit(0);  
+                break;
+            default:
+                printf("Enter a valid choice\n");
+        }
+    }
+    return 0;
+}   
