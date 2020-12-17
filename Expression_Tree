@@ -1,0 +1,120 @@
+#include<conio.h>
+#include<stdio.h>
+#include<stdlib.h>
+struct node
+{
+    char data;
+    struct node *left,*right;
+};
+struct node * stack[20];
+int result[20];
+int top=-1,r=-1;
+void inorder(struct node *t)
+{
+    if(t)
+    {
+        inorder(t->left);
+        printf("%c",t->data);
+        inorder(t->right);
+    }
+}
+void postorder(struct node *t)
+{
+    if(t)
+    {
+        postorder(t->left);
+        postorder(t->right);
+        printf("%c",t->data);
+    }
+}
+void preorder(struct node *t)
+{
+    if(t)
+    {
+        printf("%c",t->data);
+        preorder(t->left);
+        preorder(t->right);
+    }
+}
+struct node *newnode(char val)
+{
+    struct node *temp;
+    temp=(struct node*)malloc(sizeof(struct node));
+    temp->data=val;
+    temp->left=NULL;
+    temp->right=NULL;
+    return temp;
+}
+void push(struct node *t)
+{
+    stack[++top]=t;
+}
+void push_result(int v)
+{
+    result[++r]=v;
+}
+char pop_result()
+{
+    return result[r--];
+}
+struct node * pop()
+{
+    struct node * p;
+    p=stack[top--];
+    return p;
+}
+int main()
+{
+    int i;
+    struct node *t,*parent,*x,*y;
+    char str[20];
+    int value,r1,r2;
+    printf("\nEnter a postfix expression : ");
+    scanf("%s",str);
+    for(i=0;str[i]!='\0';i++)
+    {
+        t=newnode(str[i]);
+        if(isdigit(str[i]))
+        {
+            push_result(str[i]-48);
+            push(t);
+        }
+        else
+        {
+            r1=pop_result();
+            r2=pop_result();
+            parent=t;
+            x=pop();
+            y=pop();
+            parent->right=x;
+            parent->left=y;
+            push(parent);
+            switch(str[i])
+            {
+                case '+':
+                value=(r1+r2);
+                break;
+                case '-':
+                value=(r2-r1);
+                break;
+                case '*':
+                value=(r1*r2);
+                break;
+                case '/':
+                value=(r1/r2);
+                break;
+                default:
+                break;
+            }
+            push_result(value);
+        }
+    }
+    printf("\nValue of the expression is %d",pop_result());
+    printf("\nInorder traversal :\n");
+    inorder(parent);
+    printf("\nPre-order traversal :\n");
+    preorder(parent);
+    printf("\nPost-order traversal :\n");
+    postorder(parent);
+    return 0;
+}
