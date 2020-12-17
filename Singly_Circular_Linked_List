@@ -1,0 +1,188 @@
+#include<stdio.h>
+#include<stdlib.h>
+struct node 
+{ 
+    int data; 
+    struct node *next; 
+}; 
+struct node *start=NULL;
+
+void insert_at_beg() 
+{
+    struct node *t=(struct node *)malloc(sizeof(struct node));
+    struct node *ptr;
+    printf("\nEnter the value:"); 
+    scanf("%d",&t->data); 
+    if(start==NULL)
+    {
+        start=t;
+        t->next=start;
+    }
+    else
+    {
+        ptr=start;
+        while(ptr->next!=start)
+            ptr=ptr->next;
+        t->next=start;
+        ptr->next=t;
+        start=t;
+    }
+} 
+
+void insert_at_middle() 
+{ 
+    int x; 
+    struct node *t=(struct node*)malloc(sizeof(struct node)); 
+    struct node *ptr=start;
+    printf("\nEnter the element after which data should be inserted :"); 
+    scanf("%d",&x); 
+    while(ptr->data!=x) 
+        ptr=ptr->next; 
+    printf("\nEnter the data to be inserted:"); 
+    scanf("%d",&t->data);
+    t->next=ptr->next;
+    ptr->next=t;
+}
+
+void insert_at_end() 
+{ 
+    struct node *t=(struct node*)malloc(sizeof(struct node)); 
+    struct node *temp;
+    printf("\nEnter the element to be inserted:"); 
+    scanf("%d",&t->data);
+    t->next=NULL;
+    if(start==NULL)
+    {
+        start=t;
+        t->next=start;
+        return;
+    }
+    temp=start;
+    while(temp->next!=start)
+        temp=temp->next;
+    temp->next=t;
+    t->next=start;
+}
+
+void delete_at_beg() 
+{ 
+    struct node *t;
+    if(start==NULL) 
+    {
+        printf("\nList is empty\n"); 
+        return;
+    }
+    else if(start->next==start)
+    {
+        start=NULL;
+        free(start);
+        return;
+    }
+    t=start;
+    while(t->next!=start)
+        t=t->next;
+    t->next=start->next;
+    free(start);
+    start=t->next;
+}
+
+void delete_at_middle() 
+{
+    int x; 
+    struct node *prev=start,*cur=start;
+    printf("\nEnter the data to be deleted:");
+    scanf("%d",&x);
+    if(start==NULL) 
+    {
+        printf("\nList is empty\n"); 
+        return;
+    }
+    while(cur->data!=x)
+    {
+        prev=cur;
+        cur=cur->next;
+    }
+    prev->next=cur->next;
+    free(cur);
+    
+}
+
+void delete_at_end()
+{
+    struct node *prev=start,*cur=start;
+    if(start==NULL) 
+    {
+        printf("\nList is empty\n"); 
+        return;
+    }
+    if(start->next==start) 
+    {
+        start=NULL; 
+        return;
+    }
+    while(cur->next!=start)
+    {
+        prev=cur;
+        cur=cur->next;
+    }
+    prev->next=cur->next;
+    free(cur);
+}
+
+void display()
+{
+    struct node *temp=start;
+    if(start==NULL)
+    {
+        printf("\nList is empty!");
+        return;
+    }
+    printf("\nThe current list is :\n ");
+    while(temp->next!=start)
+    {
+        printf("%d\n",temp->data);
+        temp=temp->next;
+    }
+    printf("%d\n",temp->data);
+}
+
+int main()
+{
+    int opt;
+    int flag=1;
+    while(flag)
+    {
+        printf("\nEnter your choice:\n");
+        printf("1. Insert at the beginning\n");
+        printf("2. Insert at the middle\n");
+        printf("3. Insert at the end\n");
+        printf("4. Delete at the beginning\n");
+        printf("5. Delete at the middle\n");
+        printf("6. Delete at the end\n");
+        printf("7. Display current list\n");
+        printf("8. Exit\n");
+        scanf("%d",&opt);
+        switch(opt)
+        {
+            case 1: insert_at_beg();
+                    break;
+            case 2: insert_at_middle();
+                    break;
+            case 3: insert_at_end();
+                    break;
+            case 4: delete_at_beg();
+                    break;
+            case 5: delete_at_middle();
+                    break;
+            case 6: delete_at_end();
+                    break;
+            case 7: display();
+                    break;
+            case 8: flag=0;
+                    break;
+            default: printf("\nInvalid choice!\n");
+                    break;
+        }
+    }
+    return 0;
+}
