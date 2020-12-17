@@ -1,0 +1,162 @@
+#include<stdio.h>
+#include<stdlib.h>
+struct node 
+{ 
+int data; 
+struct node *prev,*next; 
+}; 
+struct node *head=NULL;
+
+void insert_at_beg() 
+{
+    struct node *t=(struct node *)malloc(sizeof(struct node)); 
+    printf("\nEnter the value:"); 
+    scanf("%d",&t->data); 
+    t->prev=NULL;
+    if(head==NULL)
+    { 
+        t->next=NULL;
+    }
+    else
+    {
+        t->next=head;
+        head->prev=t;
+    }
+    head=t;
+} 
+
+void insert_at_middle() 
+{ 
+    int x; 
+    struct node *t=(struct node*)malloc(sizeof(struct node)); 
+    printf("\nEnter the element after which data should be inserted :"); 
+    scanf("%d",&x); 
+    while((head->data!=x)&&(head->next!=NULL)) 
+        head=head->next; 
+    printf("\nEnter the data to be inserted:"); 
+    scanf("%d",&t->data); 
+    t->next=head->next; 
+    t->prev=head;
+    head->next=t;
+    t->next->prev=t;
+    while(head->prev!=NULL)
+        head=head->prev;
+}
+
+void insert_at_end() 
+{ 
+    struct node *t=(struct node*)malloc(sizeof(struct node)); 
+    printf("\nEnter the element to be inserted:"); 
+    scanf("%d",&t->data); 
+    t->next=NULL; 
+    while(head->next!=NULL) 
+        head=head->next; 
+    head->next=t; 
+    t->prev=head;
+    while(head->prev!=NULL)
+        head=head->prev;
+}
+
+void delete_at_beg() 
+{ 
+    struct node *t=(struct node*)malloc(sizeof(struct node)); 
+    if(head->next==NULL) 
+    {
+        head=NULL; 
+        return;
+    }
+    t=head;
+    head=head->next;
+    free(t);
+    head->prev=NULL;
+}
+
+void delete_at_middle() 
+{
+    int x; 
+    struct node *temp;
+    printf("\nEnter the data to be deleted:");
+    scanf("%d",&x);
+    if(head->next==NULL) 
+    {
+        head=NULL; 
+        return;
+    }
+    while(head->data!=x && head->next!=NULL)
+        head=head->next;
+    head->prev->next=head->next;
+    head->next->prev=head->prev;
+    temp=head;
+    head=head->prev;
+    free(temp);
+    while(head->prev!=NULL)
+        head=head->prev;
+}
+
+void delete_at_end()
+{
+    if(head->next==NULL) 
+    {
+        head=NULL; 
+        return;
+    }
+    while(head->next!=NULL)
+        head=head->next;
+    head=head->prev;
+    head->next=NULL;
+    while(head->prev!=NULL)
+        head=head->prev;
+}
+
+void display() 
+{ 
+    struct node *temp=head; 
+    printf("\nThe current list is:"); 
+    while(temp!=NULL) 
+    { 
+        printf("\t%d",temp->data); 
+        temp=temp->next; 
+    } 
+}
+
+
+int main()
+{
+    int opt;
+    int flag=1;
+    while(flag)
+    {
+        printf("\nEnter your choice:\n");
+        printf("1. Insert at the beginning\n");
+        printf("2. Insert at the middle\n");
+        printf("3. Insert at the end\n");
+        printf("4. Delete at the beginning\n");
+        printf("5. Delete at the middle\n");
+        printf("6. Delete at the end\n");
+        printf("7. Display current list\n");
+        printf("8. Exit\n");
+        scanf("%d",&opt);
+        switch(opt)
+        {
+            case 1: insert_at_beg();
+                    break;
+            case 2: insert_at_middle();
+                    break;
+            case 3: insert_at_end();
+                    break;
+            case 4: delete_at_beg();
+                    break;
+            case 5: delete_at_middle();
+                    break;
+            case 6: delete_at_end();
+                    break;
+            case 7: display();
+                    break;
+            case 8: flag=0;
+                    break;
+            default: printf("\nInvalid choice!\n");
+                    break;
+        }
+    }
+    return 0;
+}
