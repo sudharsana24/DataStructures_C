@@ -1,0 +1,271 @@
+/*Program to maintain employee details (emp_id, name, pay) using Linked List and perform ADT i.	Insert at the beginning
+ii.	Inset at the middle
+iii.	Insert at the end
+iv.	Delete at the beginning
+v.	Delete at the middle
+vi.	Delete at the end
+vii.	Display all the employee details
+viii.	Find an employee by employee ID
+ix.	Display the details of all the Employees who draws pay greater than an amount X
+x.	Display the details of the employees who draws maximum pay and minimum pay
+*/
+#include<stdio.h>
+#include<conio.h>
+#include<stdlib.h>
+struct emp{
+    int emp_id;
+    char name[30];
+    float pay;
+    struct emp * next;
+};
+struct emp *start=NULL;
+
+void insert_at_beg()
+{
+    struct emp *t=(struct emp *)malloc(sizeof(struct emp));
+    printf("\nEnter the employee id : ");
+    scanf("%d",&t->emp_id);
+    printf("\nEnter the employee name : ");
+    scanf("%s",t->name);
+    printf("\nEnter the employee pay : ");
+    scanf("%f",&t->pay);
+    t->next=start;
+    start=t;
+}
+void insert_at_mid()
+{
+    int x;
+    struct emp *t=(struct emp*)malloc(sizeof(struct emp));
+    struct emp *temp=start;
+    printf("\nEnter the employee id after which you want to insert :");
+    scanf("%d",&x);
+    while((temp->emp_id!=x)&&(temp->next!=NULL))
+    temp=temp->next;
+    if(temp->emp_id!=x)
+    {
+        printf("\nEmployee not found\n");
+        free(t);
+        return;
+    }
+    printf("\nEnter the employee details to be inserted:");
+    printf("\nEnter the employee id : ");
+    scanf("%d",&t->emp_id);
+    printf("\nEnter the employee name : ");
+    scanf("%s",t->name);
+    printf("\nEnter the employee pay : ");
+    scanf("%f",&t->pay);    
+    t->next=temp->next;
+    temp->next=t;
+}
+void insert_at_end()
+{
+    struct emp *temp=start;
+    struct emp *t=(struct emp*)malloc(sizeof(struct emp));
+    printf("\nEnter the employee details to be inserted:");
+    printf("\nEnter the employee id : ");
+    scanf("%d",&t->emp_id);
+    printf("\nEnter the employee name : ");
+    scanf("%s",t->name);
+    printf("\nEnter the employee pay : ");
+    scanf("%f",&t->pay); 
+    t->next=NULL;
+    if(start==NULL)
+    {
+        start=t;
+        return;
+    }
+    while(temp->next!=NULL)
+    temp=temp->next;
+    temp->next=t;
+}
+void display()
+{
+    struct emp *temp=start;
+    if(start==NULL)
+    {
+        printf("\nList is empty");
+        return;
+    }
+    printf("\nEMPLOYEE DETAILS :");
+    while(temp!=NULL)
+    {
+        printf("\nEmployee ID : %d",temp->emp_id);
+        printf("\nEmployee name : %s",temp->name);
+        printf("\nSalary : %f",temp->pay);
+        temp=temp->next;
+    }
+}
+void del_at_beg()
+{
+    struct emp *temp=start;
+    if(start==NULL)
+    {
+        printf("\nList is empty");
+        return;
+    }
+    start=start->next;
+    free(temp);
+}
+void del_at_mid()
+{
+    struct emp *cur=start;
+    struct emp *prev=start;
+    int x;
+    printf("\nEnter the employee ID to be deleted:");
+    scanf("%d",&x);
+    while((cur->next!=NULL)&&(cur->emp_id!=x))
+    {
+        prev=cur;
+        cur=cur->next;
+    }
+    if(cur->emp_id!=x)
+    {
+        printf("\nElement not found");
+        return;
+    }
+    prev->next=cur->next;
+    free(cur);
+}
+void del_at_end()
+{
+    struct emp *prev=start,*cur=start;
+    if(start==NULL)
+    {
+        printf("\nList is empty");
+        return;
+    }
+    while(cur->next!=NULL)
+    {
+        prev=cur;
+        cur=cur->next;
+    }
+    prev->next=NULL;
+    free(cur);
+}
+
+void find()
+{
+    struct emp *temp=start;
+    int x;
+    printf("\nEnter the employee ID to search : ");
+    scanf("%d",&x);
+    if(start==NULL)
+    {
+        printf("\nList is empty");
+        return;
+    }
+    while(temp->next!=NULL)
+    {
+        if(temp->emp_id==x)
+        {
+        printf("\nEmployee ID found in the records!");
+        return;
+        }
+        temp=temp->next;
+    }
+    printf("\nRecord doesn't exist!");
+}
+void check()
+{
+    struct emp *temp=start;
+    float x;
+    int flag=0;
+    printf("\nEnter the amount to be checked : ");
+    scanf("%f",&x);
+    if(start==NULL)
+    {
+        printf("\nList is empty");
+        return;
+    }
+    while(temp->next!=NULL)
+    {
+        if(temp->pay>=x)
+        {
+            printf("\nEmployee ID : %d",temp->emp_id);
+            printf("\nEmployee name : %s",temp->name);
+            printf("\nSalary : %f",temp->pay);
+            flag=1;
+        }
+        temp=temp->next;
+    }
+    if(flag==0)
+    printf("\nNone of the employees have a pay greater than %f",x);
+}
+
+void max_min()
+{
+    struct emp *cur=start;
+    float min,max;
+    if(start==NULL)
+    {
+        printf("\nList is empty");
+        return;
+    }
+    else
+    {
+        min=cur->pay;
+        max=cur->pay;
+        while(cur->next!=NULL)
+        {
+            if(min>cur->pay)
+            min=cur->pay;
+            if(max<cur->pay)
+            max=cur->pay;
+            cur=cur->next;
+        }
+    }
+    printf("\nMaximum pay : %f",max);
+
+    printf("\nMinimum pay : %f",min);
+}
+
+int main()
+{
+    int opt;
+    do
+    {
+        printf("\nEnter your choice:\n");
+        printf("1.Insert at the beginning\n2.Insert at the middle\n3.Insert at the end\n4.Delete at the beginning\n5.Delete at the middle\n6.Delete at the end\n7.Display all the employee details\n8.Find an employee by emp_id\n9.Display the employees whose pay is greater than an amount\n10.Display the details of the employees who draws maximum pay and minimum pay\n11.Exit\n");
+        scanf("%d",&opt);
+        switch(opt)
+        {
+            case 1:
+                insert_at_beg();
+                break;
+            case 2:
+                insert_at_mid();
+                break;
+            case 3:
+                insert_at_end();
+                break;
+            case 4:
+                del_at_beg();
+                break;
+            case 5:
+                del_at_mid();
+                break;
+            case 6:
+                del_at_end();
+                break;
+            case 7:
+                display();
+                break;
+            case 8:
+                find();
+                break;
+            case 9:
+                check();
+                break;
+            case 10:
+                max_min();
+                break;
+            case 11:
+                exit(0);
+                break;
+            default:
+                printf("\nInvalid choice!");
+                break;
+        }
+    }while(opt!=11);
+    return 0;
+}
